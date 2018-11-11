@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t jslee/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run jslee/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t jslee/multi-client ./client
+  - docker build -t jslee/multi-nginx ./nginx
+  - docker build -t jslee/multi-server ./server
+  - docker build -t jslee/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin"
+  # Take those images and push them to docker hub
+  - docker push jslee/multi-client
+  - docker push jslee/multi-nginx
+  - docker push jslee/multi-server
+  - docker push jslee/multi-worker
