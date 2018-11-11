@@ -15,9 +15,21 @@ after_success:
   - docker build -t jslee/multi-worker ./worker
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin"
-
   # Take those images and push them to docker hub
   - docker push jslee/multi-client
   - docker push jslee/multi-nginx
   - docker push jslee/multi-server
   - docker push jslee/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: ap-northeast-2
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-ap-northeast-2-886903370556
+  bucket_path: docker-multi
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
