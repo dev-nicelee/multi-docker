@@ -3,23 +3,23 @@ services:
   - docker
 
 before_install:
-  - docker build -t jslee/react-test -f ./client/Dockerfile.dev ./client
+  - docker build -t devjslee/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run jslee/react-test npm test -- --coverage
+  - docker run devjslee/react-test npm test -- --coverage
 
 after_success:
-  - docker build -t jslee/multi-client ./client
-  - docker build -t jslee/multi-nginx ./nginx
-  - docker build -t jslee/multi-server ./server
-  - docker build -t jslee/multi-worker ./worker
+  - docker build -t devjslee/multi-client ./client
+  - docker build -t devjslee/multi-nginx ./nginx
+  - docker build -t devjslee/multi-server ./server
+  - docker build -t devjslee/multi-worker ./worker
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take those images and push them to docker hub
-  - docker push jslee/multi-client
-  - docker push jslee/multi-nginx
-  - docker push jslee/multi-server
-  - docker push jslee/multi-worker
+  - docker push devjslee/multi-client
+  - docker push devjslee/multi-nginx
+  - docker push devjslee/multi-server
+  - docker push devjslee/multi-worker
 
 deploy:
   provider: elasticbeanstalk
